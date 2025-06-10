@@ -7,7 +7,13 @@ import Aside from "@/layout/aside/Aside.vue";
   <div class="common-layout">
     <el-container>
       <!--顶部-->
-      <el-header>Header</el-header>
+      <el-header>
+        <el-row class="header-title" flex="flex" align="middle" >
+          <el-col :span="12">
+            <div>视频智能应用运维平台</div>
+          </el-col>
+        </el-row>
+      </el-header>
 
       <el-container>
 
@@ -17,7 +23,9 @@ import Aside from "@/layout/aside/Aside.vue";
         </el-aside>
 
         <!--主界面-->
-        <el-main>Main</el-main>
+        <el-main>
+          <router-view/>
+        </el-main>
 
       </el-container>
     </el-container>
@@ -30,12 +38,18 @@ import Aside from "@/layout/aside/Aside.vue";
 
 
 <style scoped>
+.header-title{
+  padding: 20px;
+}
+
 .el-header{
-  background: gainsboro;
+  padding: 0;
+  height: 60px;
+  background: #1B1F4B;
+  color: white;
 }
 
 .el-aside{
-  background: lightyellow;
   height: 100vh;
 }
 
