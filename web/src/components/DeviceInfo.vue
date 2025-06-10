@@ -3,9 +3,78 @@
 </script>
 
 <template>
-  <p>设备信息</p>
+  <h1 class="title">设备信息</h1>
+  <el-row :gutter="20">
+
+    <el-col :span="8">
+      <!--设备存在情况卡片-->
+      <div class="device-online-card">
+        <el-row>
+          <el-col :span="12"><h6 style="padding: 10px 10px 10px 20px; color: rgba(0,0,0,60%)">接入设备总数</h6></el-col>
+          <!--TODO 页面跳转 -->
+          <el-col :span="12"><h6 style="padding: 10px 30px 10px 10px; color: #0F40F580; text-align: right">查看离线</h6>
+          </el-col>
+        </el-row>
+
+        <el-row class="device-info-card">
+          <el-col :span="2"/>
+          <el-col :span="9" class="card-info">
+            <b style="">897</b> <!--TODO 数据更新-->
+            <div style="color: rgba(0,0,0,44%)">总数</div>
+          </el-col>
+          <el-col :span="2"/>
+          <el-col :span="9" class="card-info">
+            <b style="">784</b> <!--TODO 数据更新-->
+            <div style="color: rgba(0,0,0,44%)">在线</div>
+          </el-col>
+          <el-col :span="2"/>
+        </el-row>
+
+        <el-row class="device-info-card">
+          <el-col :span="2"/>
+          <el-col :span="9" class="card-info">
+            <b style="">113</b> <!--TODO 数据更新-->
+            <div style="color: rgba(0,0,0,44%)">离线</div>
+          </el-col>
+          <el-col :span="2"/>
+          <el-col :span="9" class="card-info">
+            <b style="">87.40%</b> <!--TODO 数据更新-->
+            <div style="color: rgba(0,0,0,44%)">在线率</div>
+          </el-col>
+          <el-col :span="2"/>
+        </el-row>
+      </div>
+    </el-col>
+
+    <el-col :span="16">
+      <div class="device-online-card"></div>
+    </el-col>
+  </el-row>
+
 </template>
 
 <style scoped>
+.device-info-card {
+  height: 90px;
+  padding: 10px 0 0 0;
+  text-align: center
+}
 
+.device-online-card {
+  background: white;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  height: 250px;
+}
+
+.title {
+  padding: 10px;
+}
+
+.card-info{
+  border-radius: 5px;
+  background: #EFEFEF4D;
+  padding: 20px 0 0 0
+}
 </style>

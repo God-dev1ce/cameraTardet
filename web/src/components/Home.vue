@@ -19,7 +19,7 @@ import Aside from "@/layout/aside/Aside.vue";
 
         <!--侧边栏-->
         <el-aside width="200px">
-          <Aside></Aside>
+          <Aside class="aside"></Aside>
         </el-aside>
 
         <!--主界面-->
@@ -38,6 +38,10 @@ import Aside from "@/layout/aside/Aside.vue";
 
 
 <style scoped>
+.aside{
+  height: 100vh;
+}
+
 .header-title{
   padding: 20px;
 }
@@ -54,6 +58,6 @@ import Aside from "@/layout/aside/Aside.vue";
 }
 
 .el-main{
-  background: aqua;
+  background: #F6F7FA;
 }
 </style>
