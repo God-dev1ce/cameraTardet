@@ -47,7 +47,14 @@
     </el-col>
 
     <el-col :span="16">
-      <div class="device-online-card"></div>
+      <div class="device-online-card">
+        <el-row>
+          <el-col :span="12"><h6 style="padding: 10px 10px 10px 20px; color: rgba(0,0,0,60%)">近24小时在离线统计</h6></el-col>
+          <!--TODO 页面跳转 -->
+          <el-col :span="12"><h6 style="padding: 10px 30px 10px 10px; color: #0F40F580; text-align: right"></h6>
+          </el-col>
+        </el-row>
+      </div>
     </el-col>
   </el-row>
 

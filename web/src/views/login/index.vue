@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref, reactive} from 'vue'
 import {useRouter} from "vue-router";
+import {login} from "@/api/login.ts";
 const router = useRouter()
 
 let user = reactive({
@@ -17,15 +18,21 @@ const rules = ref({
   ],
   password:[
     { required: true, message: 'Please input Activity password', trigger: 'blur' },
-    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
+    { min: 6, max: 16, message: 'Length should be 3 to 5', trigger: 'blur' },
   ]
 })
 
 function handlerLogin(formEl: any){
   formEl.validate((valid:any)=>{
     if(valid){
-      router.push('/home')
-      console.log("submit loginInfo")
+      // router.push('/home')
+      login(user.username, user.password).then(res=>{
+        if(res.code == 200){
+          console.log(res.data)
+        }
+      }).catch(err=>{
+        console.log(err)
+      })
     }else{
       console.log("err submit!")
     }
