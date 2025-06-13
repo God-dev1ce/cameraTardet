@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {type DeviceOnlineInfoReply, getDeviceOnlineInfo} from "@/api/deviceInfo.ts";
 import {onMounted, ref} from "vue";
+import {ElMessage} from "element-plus";
 
 const defaultDeviceInfo: DeviceOnlineInfoReply = {
   total_devices: 0,
@@ -14,6 +15,7 @@ onMounted(()=>{
   getDeviceOnlineInfo().then(res=>{
     if(res.code==200){
       deviceInfo.value = res.data
+      ElMessage.success("成功获取设备信息")
     }
   }).catch(err=>{
     console.log(err)

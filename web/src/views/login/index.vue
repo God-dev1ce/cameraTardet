@@ -3,6 +3,8 @@ import {ref, reactive} from 'vue'
 import {useRouter} from "vue-router";
 import {login} from "@/api/login.ts";
 import {setTokens} from "@/http/token.ts";
+import { ElMessage } from 'element-plus'
+
 const router = useRouter()
 
 let user = reactive({
@@ -30,10 +32,11 @@ function handlerLogin(formEl: any){
         if(res.code == 200){
           setTokens(res.data.access_token, res.data.refresh_token)
           localStorage.setItem('token_type', res.data.token_type)
-          router.push('/home')
+          ElMessage.success("登录成功")
+          router.push('/device_info')
         }
       }).catch(err=>{
-        console.log(err)
+        ElMessage.error(err.response.data.msg)
       })
     }else{
       console.log("err submit!")

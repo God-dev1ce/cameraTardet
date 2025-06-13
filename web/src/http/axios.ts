@@ -35,18 +35,20 @@ api.interceptors.response.use(
     (response: AxiosResponse) => {
         return response.data;
     },
-    err => {
+    async err => {
         if(err.response?.status == 401){
+            const originalRequest = err.config;
             const rt = getRefreshToken()
             if(rt){
-                refreshToken(rt).then(res=>{
+                await refreshToken(rt).then(res=>{
                     setTokens(res.data.access_token, rt)
-                    return api(err.config)
                 }).catch(()=>{
                     clearTokens()
                     router.push('/login')
                 })
             }
+            originalRequest.headers.Authorization = `${localStorage.getItem('token_type')} ${getAccessToken()}`
+            return api(originalRequest)
         }
         return Promise.reject(err);
     }
