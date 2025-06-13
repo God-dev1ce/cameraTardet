@@ -1,10 +1,15 @@
 import axios, {type AxiosResponse} from 'axios'
+import {clearTokens, getAccessToken, getRefreshToken, setTokens} from "@/api/token.ts";
+import {refreshToken} from "@/api/login.ts";
+import {useRouter} from "vue-router";
 
 export interface ApiResponse<T = any> {
     code: number;
     data: T;
     msg: string;
 }
+
+const router = useRouter()
 
 const api = axios.create({
     baseURL: 'http://localhost:5173',
@@ -16,6 +21,11 @@ const api = axios.create({
 
 // 请求拦截处理
 api.interceptors.request.use(config=>{
+    const token = getAccessToken()
+    const tokenType = localStorage.getItem('token_type')
+    if(token && tokenType && config.headers){
+        config.headers.Authorization = `${tokenType} ${token}`
+    }
     return config;
 }, err => {
     return err
@@ -23,10 +33,21 @@ api.interceptors.request.use(config=>{
 
 api.interceptors.response.use(
     (response: AxiosResponse) => {
-        return response.data; // 仍然是 any，交给调用处处理
+        return response.data;
     },
-    error => {
-        return Promise.reject(error);
+    err => {
+        if(err.response?.status == 401){
+            const rt = getRefreshToken()
+            if(rt){
+                refreshToken(rt).then(res=>{
+                    setTokens(res.data.access_token, rt)
+                }).catch(()=>{
+                    clearTokens()
+                    router.push('/login')
+                })
+            }
+        }
+        return Promise.reject(err);
     }
 )
 

@@ -2,6 +2,7 @@
 import {ref, reactive} from 'vue'
 import {useRouter} from "vue-router";
 import {login} from "@/api/login.ts";
+import {setTokens} from "@/api/token.ts";
 const router = useRouter()
 
 let user = reactive({
@@ -25,10 +26,11 @@ const rules = ref({
 function handlerLogin(formEl: any){
   formEl.validate((valid:any)=>{
     if(valid){
-      // router.push('/home')
       login(user.username, user.password).then(res=>{
         if(res.code == 200){
-          console.log(res.data)
+          setTokens(res.data.access_token, res.data.refresh_token)
+          localStorage.setItem('token_type', res.data.token_type)
+          router.push('/home')
         }
       }).catch(err=>{
         console.log(err)
