@@ -3,6 +3,28 @@ import {type DeviceOnlineInfoReply, getDeviceOnlineInfo} from "@/api/deviceInfo.
 import {onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 
+const option = ref({
+  xAxis: {
+    type: 'category',
+    data: ['12:00']
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series: [
+    {
+      data: [0],
+      type: 'bar',
+      stack: 'x'
+    },
+    {
+      data: [0],
+      type: 'bar',
+      stack: 'x'
+    },
+  ]
+})
+
 const defaultDeviceInfo: DeviceOnlineInfoReply = {
   total_devices: 0,
   online_devices: 0,
@@ -68,16 +90,86 @@ onMounted(()=>{
       </div>
     </el-col>
 
+    <!--近24小时在离线情况统计-->
     <el-col :span="16">
       <div class="device-online-card">
         <el-row>
-          <el-col :span="12"><h6 style="padding: 10px 10px 10px 20px; color: rgba(0,0,0,60%)">近24小时在离线统计</h6></el-col>
-          <!--TODO 页面跳转 -->
-          <el-col :span="12"><h6 style="padding: 10px 30px 10px 10px; color: #0F40F580; text-align: right"></h6>
+          <el-col :span="24"><h6 style="padding: 10px 10px 10px 20px; color: rgba(0,0,0,60%)">近24小时在离线统计</h6></el-col>
+        </el-row>
+        <e-charts :option="option"></e-charts>
+      </div>
+    </el-col>
+  </el-row>
+
+  <!--今日报警统计-->
+  <el-row :gutter="20" style="padding: 30px 0 0 0">
+    <el-col :span="12">
+      <div class="device-online-card">
+        <el-row>
+          <el-col :span="24"><h6 style="padding: 10px 10px 10px 20px; color: rgba(0,0,0,60%)">今日报警统计</h6></el-col>
+        </el-row>
+
+        <el-row class="device-info-card" style="color: rgba(0,0,0,44%); font-size: 10px">
+          <el-col :span="1"/>
+          <el-col :span="6" class="card-info">
+            <b style="color: rgb(52, 98, 253); font-size: 23px">1</b>
+            <div>报警类型1</div>
           </el-col>
+          <el-col :span="2"/>
+          <el-col :span="6" class="card-info">
+            <b style="color: rgb(52, 98, 253); font-size: 23px">2</b>
+            <div>报警类型2</div>
+          </el-col>
+          <el-col :span="2"/>
+          <el-col :span="6" class="card-info">
+            <b style="color: rgb(52, 98, 253); font-size: 23px">3</b>
+            <div>报警类型3</div>
+          </el-col>
+          <el-col :span="1"/>
+        </el-row>
+
+        <el-row class="device-info-card" style="color: rgba(0,0,0,44%);">
+          <el-col :span="1"/>
+          <el-col :span="6" class="card-info">
+            <b style="color: rgb(52, 98, 253); font-size: 23px">1</b>
+            <div>报警类型4</div>
+          </el-col>
+          <el-col :span="2"/>
+          <el-col :span="6" class="card-info">
+            <b style="color: rgb(52, 98, 253); font-size: 23px">2</b>
+            <div>报警类型5</div>
+          </el-col>
+          <el-col :span="2"/>
+          <el-col :span="6" class="card-info">
+            <b style="color: rgb(52, 98, 253); font-size: 23px">3</b>
+            <div>报警类型6</div>
+          </el-col>
+          <el-col :span="1"/>
+        </el-row>
+
+      </div>
+    </el-col>
+
+    <!--今日报警统计饼状图-->
+    <el-col :span="12">
+      <div class="device-online-card">
+        <el-row>
+          <el-col :span="24"><h6 style="padding: 10px 10px 10px 20px; color: rgba(0,0,0,60%)">巡检任务配置</h6></el-col>
         </el-row>
       </div>
     </el-col>
+  </el-row>
+
+  <!--本月报警趋势折线图-->
+  <el-row style="padding: 30px 0 0 0">
+    <el-col :span="24">
+      <div class="device-online-card">
+        <el-row>
+          <el-col :span="24"><h6 style="padding: 10px 10px 10px 20px; color: rgba(0,0,0,60%)">本月报警趋势</h6></el-col>
+        </el-row>
+      </div>
+    </el-col>
+
   </el-row>
 
 </template>
@@ -85,7 +177,7 @@ onMounted(()=>{
 <style scoped>
 .device-info-card {
   height: 90px;
-  padding: 10px 0 0 0;
+  padding: 5px 0 0 0;
   text-align: center
 }
 
