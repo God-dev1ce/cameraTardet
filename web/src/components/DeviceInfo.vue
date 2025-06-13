@@ -1,4 +1,24 @@
 <script setup lang="ts">
+import {type DeviceOnlineInfoReply, getDeviceOnlineInfo} from "@/api/deviceInfo.ts";
+import {onMounted, ref} from "vue";
+
+const defaultDeviceInfo: DeviceOnlineInfoReply = {
+  total_devices: 0,
+  online_devices: 0,
+  offline_devices: 0
+}
+
+const deviceInfo = ref<DeviceOnlineInfoReply>(defaultDeviceInfo)
+
+onMounted(()=>{
+  getDeviceOnlineInfo().then(res=>{
+    if(res.code==200){
+      deviceInfo.value = res.data
+    }
+  }).catch(err=>{
+    console.log(err)
+  })
+})
 
 </script>
 
@@ -19,12 +39,12 @@
         <el-row class="device-info-card">
           <el-col :span="2"/>
           <el-col :span="9" class="card-info">
-            <b style="">897</b> <!--TODO 数据更新-->
+            <b style="">{{ deviceInfo.total_devices }}</b>
             <div style="color: rgba(0,0,0,44%)">总数</div>
           </el-col>
           <el-col :span="2"/>
           <el-col :span="9" class="card-info">
-            <b style="">784</b> <!--TODO 数据更新-->
+            <b style="">{{ deviceInfo.online_devices }}</b>
             <div style="color: rgba(0,0,0,44%)">在线</div>
           </el-col>
           <el-col :span="2"/>
@@ -33,12 +53,12 @@
         <el-row class="device-info-card">
           <el-col :span="2"/>
           <el-col :span="9" class="card-info">
-            <b style="">113</b> <!--TODO 数据更新-->
+            <b style="">{{ deviceInfo.offline_devices }}</b>
             <div style="color: rgba(0,0,0,44%)">离线</div>
           </el-col>
           <el-col :span="2"/>
           <el-col :span="9" class="card-info">
-            <b style="">87.40%</b> <!--TODO 数据更新-->
+            <b style="">{{ ((deviceInfo.online_devices/deviceInfo.total_devices)*100).toFixed(2) }}%</b>
             <div style="color: rgba(0,0,0,44%)">在线率</div>
           </el-col>
           <el-col :span="2"/>

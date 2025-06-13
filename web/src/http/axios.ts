@@ -1,5 +1,5 @@
 import axios, {type AxiosResponse} from 'axios'
-import {clearTokens, getAccessToken, getRefreshToken, setTokens} from "@/api/token.ts";
+import {clearTokens, getAccessToken, getRefreshToken, setTokens} from "@/http/token.ts";
 import {refreshToken} from "@/api/login.ts";
 import {useRouter} from "vue-router";
 
@@ -41,6 +41,7 @@ api.interceptors.response.use(
             if(rt){
                 refreshToken(rt).then(res=>{
                     setTokens(res.data.access_token, rt)
+                    return api(err.config)
                 }).catch(()=>{
                     clearTokens()
                     router.push('/login')

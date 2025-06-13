@@ -1,5 +1,6 @@
-import http from './http.ts'
-import type {ApiResponse} from "@/api/axios.ts";
+import http from '@/http/http.ts'
+import type {ApiResponse} from "@/http/axios.ts";
+
 
 interface Token {
     access_token: string;
@@ -19,7 +20,7 @@ export async function login(username: string, password: string): Promise<ApiResp
             password: password
         })
     }catch (err){
-        throw err;
+        return Promise.reject(err);
     }
 }
 
@@ -29,6 +30,6 @@ export async function refreshToken(refreshToken: string): Promise<ApiResponse<Ge
             refresh_token: localStorage.getItem('refresh_token')
         })
     }catch (err){
-        throw err
+        return Promise.reject(err);
     }
 }

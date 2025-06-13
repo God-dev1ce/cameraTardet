@@ -2,7 +2,7 @@
 import {ref, reactive} from 'vue'
 import {useRouter} from "vue-router";
 import {login} from "@/api/login.ts";
-import {setTokens} from "@/api/token.ts";
+import {setTokens} from "@/http/token.ts";
 const router = useRouter()
 
 let user = reactive({
