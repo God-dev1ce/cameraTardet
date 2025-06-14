@@ -37,7 +37,7 @@ onMounted(()=>{
   getDeviceOnlineInfo().then(res=>{
     if(res.code==200){
       deviceInfo.value = res.data
-      ElMessage.success("成功获取设备信息")
+      ElMessage.success("获取设备信息成功")
     }
   }).catch(err=>{
     console.log(err)
