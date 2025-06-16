@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import {type DeviceOnlineInfoReply, getDeviceOnlineInfo} from "@/api/deviceInfo.ts";
+import {type DeviceOnlineInfoReply, getDeviceOnlineInfo, getDeviceOnlineList} from "@/api/deviceInfo.ts";
 import {onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 
 const option = ref({
+  legend: {
+    data: ['总设备', '在线设备']
+  },
   xAxis: {
     type: 'category',
     data: ['12:00']
@@ -13,11 +16,13 @@ const option = ref({
   },
   series: [
     {
+      name: "总设备",
       data: [0],
       type: 'bar',
       stack: 'x'
     },
     {
+      name: "在线设备",
       data: [0],
       type: 'bar',
       stack: 'x'
@@ -34,6 +39,7 @@ const defaultDeviceInfo: DeviceOnlineInfoReply = {
 const deviceInfo = ref<DeviceOnlineInfoReply>(defaultDeviceInfo)
 
 onMounted(()=>{
+  // 获取当前在离线设备数量
   getDeviceOnlineInfo().then(res=>{
     if(res.code==200){
       deviceInfo.value = res.data
@@ -42,6 +48,17 @@ onMounted(()=>{
   }).catch(err=>{
     console.log(err)
   })
+
+  // 获取历史在离线设备情况
+  getDeviceOnlineList().then(res=>{
+    if(res.code == 200){
+      console.log(res.data)
+      option.value.xAxis.data = res.data.map(item=>item.time)
+      option.value.series[1].data=res.data.map(item=>item.online_devices)
+      option.value.series[0].data=res.data.map(item=>item.total_devices-item.online_devices)
+    }
+  })
+
 })
 
 </script>

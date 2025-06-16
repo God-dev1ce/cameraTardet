@@ -2,18 +2,18 @@ import type {ApiResponse} from "@/http/axios.ts";
 import http from '@/http/http.ts'
 
 
-export interface DeviceOnlineInfoReply{
+export interface DeviceOnlineInfoReply {
     total_devices: number;
     online_devices: number;
     offline_devices: number;
 }
 
-export interface DevicesReply{
+export interface DevicesReply {
     total: number;
     devices: DeviceInfo[]
 }
 
-export interface DeviceInfo{
+export interface DeviceInfo {
     id: string;
     name: string;
     code: string;
@@ -27,10 +27,17 @@ export interface DeviceInfo{
     is_online: boolean;
 }
 
+export interface DeviceOnlineList {
+    time: string;
+    total_devices: number;
+    online_devices: number;
+}
+
+
 export async function getDeviceOnlineInfo(): Promise<ApiResponse<DeviceOnlineInfoReply>> {
     try {
         return await http.get<DeviceOnlineInfoReply>('/api/getDevicesStats')
-    }catch (err){
+    } catch (err) {
         return Promise.reject(err);
     }
 }
@@ -38,7 +45,15 @@ export async function getDeviceOnlineInfo(): Promise<ApiResponse<DeviceOnlineInf
 export async function getNodeDeviceList(node_id: string): Promise<ApiResponse<DevicesReply>> {
     try {
         return await http.get<DevicesReply>(`/api/getDevicesByNode/${node_id}`)
-    }catch (err){
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
+
+export async function getDeviceOnlineList(): Promise<ApiResponse<DeviceOnlineList[]>> {
+    try {
+        return await http.get<DeviceOnlineList[]>('/api/getDeviceOnlineInfo')
+    } catch (err) {
         return Promise.reject(err);
     }
 }
