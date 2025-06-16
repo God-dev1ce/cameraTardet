@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
+import {nextTick, onMounted, ref} from "vue";
 import {getNodeTree, type NodeInfo} from "@/api/nodeInfo.ts";
 import {ElMessage} from "element-plus";
 import {type DeviceInfo, getNodeDeviceList} from "@/api/deviceInfo.ts";
+import NetWorkCamera from "@/components/NetWorkCamera.vue";
 
 interface TreeNode {
   label: string
@@ -16,6 +17,10 @@ const map = new Map<string, string>()
 const treeData = ref<TreeNode[]>()
 
 const deviceList = ref<DeviceInfo[]>()
+
+const dialogVisible = ref(false)
+
+const deviceLiveId = ref()
 
 // 数据转换
 function convertToTreeData(data: NodeInfo[]): TreeNode[] {
@@ -60,6 +65,14 @@ function refreshDeviceList(node_id: string){
     if(err.status==404){
       deviceList.value = undefined
     }
+  })
+}
+
+const openLive= (id: string)=>{
+  deviceLiveId.value = id
+  dialogVisible.value = false
+  nextTick(()=>{
+    dialogVisible.value = true
   })
 }
 
@@ -116,13 +129,17 @@ onMounted(() => {
 
       <el-row class="tree">
         <el-table :data="deviceList" style="width: 100%; background: rgba(0,0,0,0); padding: 20px 20px 0 20px" >
+
           <el-table-column prop="name" label="设备名称" />
+
           <el-table-column prop="node_id" label="所属节点">
             <template #default="{ row }">
               {{ getNodeName(row.node_id) }}
             </template>
           </el-table-column>
+
           <el-table-column prop="code" label="设备编码" />
+
           <el-table-column prop="is_online" label="在线情况">
             <template #default="{ row }">
               <el-tag :type="row.is_online ? 'success' : 'danger'">
@@ -130,10 +147,20 @@ onMounted(() => {
               </el-tag>
             </template>
           </el-table-column>
+
+          <el-table-column prop="" label="预览">
+            <template #default="{ row }">
+              <el-button key="primary" type="primary" @click="openLive(row.id)" text bg>预览</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </el-row>
     </el-col>
   </el-row>
+
+  <el-dialog v-model="dialogVisible" @close="dialogVisible = false" width="60%">
+    <NetWorkCamera v-if="dialogVisible" :deviceId=deviceLiveId></NetWorkCamera>
+  </el-dialog>
 </template>
 
 <style scoped>
