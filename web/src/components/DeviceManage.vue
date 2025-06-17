@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {nextTick, onMounted, ref} from "vue";
-import {addNode, getNodeTree, type NodeInfo} from "@/api/nodeInfo.ts";
+import {addNode, deleteNode, getNodeTree, type NodeInfo} from "@/api/nodeInfo.ts";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {type DeviceInfo, getNodeDeviceList} from "@/api/deviceInfo.ts";
 import NetWorkCamera from "@/components/NetWorkCamera.vue";
@@ -100,7 +100,27 @@ const getNodeName=(id:string)=>{
   return map.get(id)
 }
 
-const open = () => {
+const deleteNodeInfo = () => {
+  ElMessageBox.confirm(
+      '您确定要删除当前节点吗',
+      'Warning',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(() => {
+        // TODO: 确认删除逻辑后再调用api
+        // deleteNode(selectNode.value.id)
+        ElMessage({
+          type: 'success',
+          message: 'Delete completed',
+        })
+      })
+}
+
+const addNodeInfo = () => {
   ElMessageBox.prompt('请输入节点名称', '新增节点', {
     confirmButtonText: 'OK',
     cancelButtonText: 'Cancel',
@@ -147,8 +167,8 @@ onMounted(() => {
               <h4>节点名称:{{ selectNode.name }}</h4>
             </el-col>
             <el-col :span="10">
-              <el-button type="primary" size="small" @click="open">+</el-button>
-              <el-button type="danger" size="small">-</el-button>
+              <el-button type="primary" size="small" @click="addNodeInfo">+</el-button>
+              <el-button type="danger" size="small" @click="deleteNodeInfo">-</el-button>
             </el-col>
           </el-row>
 

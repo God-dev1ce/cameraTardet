@@ -33,4 +33,12 @@ export async function addNode(node_name: string, parent_id: string): Promise<Api
     }
 }
 
+export async function deleteNode(node_id: string): Promise<ApiResponse<null>> {
+    try{
+        return await http.delete(`/api/deleteNode/${node_id}`)
+    }catch (err){
+        return Promise.reject(err)
+    }
+}
+
 
