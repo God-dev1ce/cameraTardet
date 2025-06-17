@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {nextTick, onMounted, ref} from "vue";
-import {getNodeTree, type NodeInfo} from "@/api/nodeInfo.ts";
-import {ElMessage} from "element-plus";
+import {addNode, getNodeTree, type NodeInfo} from "@/api/nodeInfo.ts";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {type DeviceInfo, getNodeDeviceList} from "@/api/deviceInfo.ts";
 import NetWorkCamera from "@/components/NetWorkCamera.vue";
 
@@ -10,6 +10,7 @@ interface TreeNode {
   children?: TreeNode[]
   id: string,
   parent_id: string | undefined
+  name: string
 }
 
 const map = new Map<string, string>()
@@ -22,13 +23,20 @@ const dialogVisible = ref(false)
 
 const deviceLiveId = ref()
 
+// 当前选择节点id
+const selectNode = ref({
+  name: "",
+  id:"",
+})
+
 // 数据转换
 function convertToTreeData(data: NodeInfo[]): TreeNode[] {
   return data.map((node) => ({
     label: node.name,
     children: node.children && node.children.length > 0 ? convertToTreeData(node.children) : [],
     id: node.id,
-    parent_id: node.parent_id
+    parent_id: node.parent_id,
+    name: node.name,
   }))
 }
 
@@ -49,6 +57,8 @@ async function refreshNode(){
       traverse(treeData.value)
       // 首次加载显示第一个节点的设备
       if(res.data.length!=0){
+        selectNode.value.id = res.data[0].id
+        selectNode.value.name = res.data[0].name
         refreshDeviceList(res.data[0].id)
       }
     }
@@ -77,6 +87,8 @@ const openLive= (id: string)=>{
 }
 
 const handleNodeClick = (data: TreeNode, node: any, component: any)=>{
+  selectNode.value.name = data?.name
+  selectNode.value.id = data.id;
   refreshDeviceList(data?.id)
 }
 
@@ -87,6 +99,36 @@ const hasChildren = (data: any): boolean => {
 const getNodeName=(id:string)=>{
   return map.get(id)
 }
+
+const open = () => {
+  ElMessageBox.prompt('请输入节点名称', '新增节点', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+  })
+      .then(({ value }) => {
+        addNode(value, selectNode.value.id).then(res=>{
+          if(res.code==200){
+            ElMessage({
+              type: 'success',
+              message: `添加成功`,
+            })
+            refreshNode()
+          }
+        }).catch(err=>{
+          ElMessage({
+            type: 'info',
+            message: err,
+          })
+        })
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '取消添加',
+        })
+      })
+}
+
 onMounted(() => {
   refreshNode()
   ElMessage.success("获取节点信息成功")
@@ -99,6 +141,20 @@ onMounted(() => {
     <!--展示树-->
     <el-col :span="6">
       <div class="tree">
+        <div style="margin: 10px 0 0 10px; width: 100%">
+          <el-row justify="space-between">
+            <el-col :span="12">
+              <h4>节点名称:{{ selectNode.name }}</h4>
+            </el-col>
+            <el-col :span="10">
+              <el-button type="primary" size="small" @click="open">+</el-button>
+              <el-button type="danger" size="small">-</el-button>
+            </el-col>
+          </el-row>
+
+
+        </div>
+        <hr style="margin: 10px 0 0 0"/>
         <el-tree
             :data="treeData"
             node-key="id"
@@ -124,7 +180,10 @@ onMounted(() => {
 
     <el-col :span="18">
 
-      <el-row class="tree" style="height: 100px"></el-row>
+      <el-row class="tree" style="height: 100px">
+
+      </el-row>
+
       <el-row style="height: 20px"></el-row>
 
       <el-row class="tree">

@@ -22,4 +22,15 @@ export async function getNodeTree(): Promise<ApiResponse<NodeInfo[]>> {
     }
 }
 
+export async function addNode(node_name: string, parent_id: string): Promise<ApiResponse<null>> {
+    try{
+        return await http.post<null>('/api/addNode', {
+            node_name: node_name,
+            parent_id: parent_id
+        })
+    }catch(err){
+        return Promise.reject(err)
+    }
+}
+
 
