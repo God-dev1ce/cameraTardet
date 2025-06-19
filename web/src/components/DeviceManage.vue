@@ -111,11 +111,14 @@ const deleteNodeInfo = () => {
       }
   )
       .then(() => {
-        // TODO: 确认删除逻辑后再调用api
-        // deleteNode(selectNode.value.id)
-        ElMessage({
-          type: 'success',
-          message: 'Delete completed',
+        deleteNode(selectNode.value.id).then(res=>{
+          if(res.code == 200){
+            refreshNode()
+            ElMessage({
+              type: 'success',
+              message: 'Delete completed',
+            })
+          }
         })
       })
 }
@@ -200,11 +203,12 @@ onMounted(() => {
 
     <el-col :span="18">
 
+      <!--TODO: 筛选-->
       <el-row class="tree" style="height: 100px">
 
       </el-row>
 
-      <el-row style="height: 20px"></el-row>
+      <el-row style="height: 20px"/>
 
       <el-row class="tree">
         <el-table :data="deviceList" style="width: 100%; background: rgba(0,0,0,0); padding: 20px 20px 0 20px" >
@@ -230,6 +234,13 @@ onMounted(() => {
           <el-table-column prop="" label="预览">
             <template #default="{ row }">
               <el-button key="primary" type="primary" @click="openLive(row.id)" text bg>预览</el-button>
+            </template>
+          </el-table-column>
+
+          <el-table-column>
+            <template #default="{ row }">
+              <!--TODO: 设置面板-->
+              <el-button key="primary" type="danger" text>设置</el-button>
             </template>
           </el-table-column>
         </el-table>
