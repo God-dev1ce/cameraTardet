@@ -26,7 +26,7 @@ const deviceLiveId = ref()
 // 当前选择节点id
 const selectNode = ref({
   name: "",
-  id:"",
+  id: "",
 })
 
 // 数据转换
@@ -41,22 +41,22 @@ function convertToTreeData(data: NodeInfo[]): TreeNode[] {
 }
 
 // 刷新节点树
-async function refreshNode(){
+async function refreshNode() {
   await getNodeTree().then(res => {
     if (res.code == 200) {
       treeData.value = convertToTreeData(res.data)
       // 递归映射节点数
       const traverse = (nodes: TreeNode[]) => {
-        for(const node of nodes){
+        for (const node of nodes) {
           map.set(node.id, node.label)
-          if(node.children){
+          if (node.children) {
             traverse(node.children)
           }
         }
       }
       traverse(treeData.value)
       // 首次加载显示第一个节点的设备
-      if(res.data.length!=0){
+      if (res.data.length != 0) {
         selectNode.value.id = res.data[0].id
         selectNode.value.name = res.data[0].name
         refreshDeviceList(res.data[0].id)
@@ -66,27 +66,27 @@ async function refreshNode(){
 }
 
 // 刷新当前节点的设备列表
-function refreshDeviceList(node_id: string){
-  getNodeDeviceList(node_id).then((res)=>{
-    if(res.code == 200){
+function refreshDeviceList(node_id: string) {
+  getNodeDeviceList(node_id).then((res) => {
+    if (res.code == 200) {
       deviceList.value = res.data.devices
     }
-  }).catch(err=>{
-    if(err.status==404){
+  }).catch(err => {
+    if (err.status == 404) {
       deviceList.value = undefined
     }
   })
 }
 
-const openLive= (id: string)=>{
+const openLive = (id: string) => {
   deviceLiveId.value = id
   dialogVisible.value = false
-  nextTick(()=>{
+  nextTick(() => {
     dialogVisible.value = true
   })
 }
 
-const handleNodeClick = (data: TreeNode, node: any, component: any)=>{
+const handleNodeClick = (data: TreeNode, node: any, component: any) => {
   selectNode.value.name = data?.name
   selectNode.value.id = data.id;
   refreshDeviceList(data?.id)
@@ -96,7 +96,7 @@ const hasChildren = (data: any): boolean => {
   return Array.isArray(data.children) && data.children.length > 0
 }
 
-const getNodeName=(id:string)=>{
+const getNodeName = (id: string) => {
   return map.get(id)
 }
 
@@ -111,8 +111,8 @@ const deleteNodeInfo = () => {
       }
   )
       .then(() => {
-        deleteNode(selectNode.value.id).then(res=>{
-          if(res.code == 200){
+        deleteNode(selectNode.value.id).then(res => {
+          if (res.code == 200) {
             refreshNode()
             ElMessage({
               type: 'success',
@@ -128,16 +128,16 @@ const addNodeInfo = () => {
     confirmButtonText: 'OK',
     cancelButtonText: 'Cancel',
   })
-      .then(({ value }) => {
-        addNode(value, selectNode.value.id).then(res=>{
-          if(res.code==200){
+      .then(({value}) => {
+        addNode(value, selectNode.value.id).then(res => {
+          if (res.code == 200) {
             ElMessage({
               type: 'success',
               message: `添加成功`,
             })
             refreshNode()
           }
-        }).catch(err=>{
+        }).catch(err => {
           ElMessage({
             type: 'info',
             message: err,
@@ -211,9 +211,9 @@ onMounted(() => {
       <el-row style="height: 20px"/>
 
       <el-row class="tree">
-        <el-table :data="deviceList" style="width: 100%; background: rgba(0,0,0,0); padding: 20px 20px 0 20px" >
+        <el-table :data="deviceList" style="width: 100%; background: rgba(0,0,0,0); padding: 20px 20px 0 20px">
 
-          <el-table-column prop="name" label="设备名称" />
+          <el-table-column prop="name" label="设备名称"/>
 
           <el-table-column prop="node_id" label="所属节点">
             <template #default="{ row }">
@@ -221,7 +221,7 @@ onMounted(() => {
             </template>
           </el-table-column>
 
-          <el-table-column prop="code" label="设备编码" />
+          <el-table-column prop="code" label="设备编码"/>
 
           <el-table-column prop="is_online" label="在线情况">
             <template #default="{ row }">

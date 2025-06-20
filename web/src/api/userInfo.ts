@@ -33,3 +33,11 @@ export async function getUserList(skip: number, limit: number): Promise<ApiRespo
         return Promise.reject(err)
     }
 }
+
+export async function deleteUser(usercode: string): Promise<ApiResponse<null>> {
+    try{
+        return http.delete<null>(`/api/delUsers/${usercode}`)
+    }catch(err){
+        return Promise.reject(err)
+    }
+}
